@@ -2,20 +2,21 @@ package amadeuszx.habitica;
 
 import static amadeuszx.habitica.enumy.Czary.*;
 import static amadeuszx.habitica.enumy.Czaty.*;
+import java.awt.event.KeyEvent;
 
 /**
  *
  * @author MarcinAmadeuszOlszewski
  */
-public class Grafika extends javax.swing.JFrame{
+public class Grafika extends javax.swing.JFrame {
 
-    public Grafika(){
+    public Grafika() {
         initComponents();
         setTitle("Habitica");
 
         String[] dane = Autoryzacja.dane();
         mechanik = new Mechanika(dane[0], dane[1]);
-        if(wybranyCzat == null){
+        if (wybranyCzat == null) {
             czatDruzynyActionPerformed(null);
         }
     }
@@ -85,6 +86,12 @@ public class Grafika extends javax.swing.JFrame{
         wynik.setColumns(20);
         wynik.setRows(5);
         jScrollPane1.setViewportView(wynik);
+
+        wiadomosc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                wiadomoscKeyPressed(evt);
+            }
+        });
 
         wyslijWiadomosc.setText("wyslij");
         wyslijWiadomosc.addActionListener(new java.awt.event.ActionListener() {
@@ -246,7 +253,10 @@ public class Grafika extends javax.swing.JFrame{
 
     private void wyslijWiadomoscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wyslijWiadomoscActionPerformed
         wyslijWiadomosc.setEnabled(true);
-        wynik.setText(mechanik.piszNaCzat(wiadomosc.getText(), wybranyCzat));
+        if (!wiadomosc.getText().isEmpty()) {
+            wynik.setText(mechanik.piszNaCzat(wiadomosc.getText(), wybranyCzat));
+            wiadomosc.setText("");
+        }
     }//GEN-LAST:event_wyslijWiadomoscActionPerformed
 
     private void czatDruzynyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_czatDruzynyActionPerformed
@@ -261,29 +271,35 @@ public class Grafika extends javax.swing.JFrame{
         wynik.setText(mechanik.dzialajCzat(wybranyCzat));
     }//GEN-LAST:event_czatGildiiActionPerformed
 
+    private void wiadomoscKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_wiadomoscKeyPressed
+        if (wyslijWiadomosc.isEnabled() && !wiadomosc.getText().isEmpty() && evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            wyslijWiadomoscActionPerformed(null);
+        }
+    }//GEN-LAST:event_wiadomoscKeyPressed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]){
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try{
-            for(javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()){
-                if("Nimbus".equals(info.getName())){
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        }catch(ClassNotFoundException ex){
+        } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Grafika.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }catch(InstantiationException ex){
+        } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(Grafika.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }catch(IllegalAccessException ex){
+        } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(Grafika.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }catch(javax.swing.UnsupportedLookAndFeelException ex){
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Grafika.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
