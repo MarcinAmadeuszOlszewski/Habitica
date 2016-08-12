@@ -33,7 +33,7 @@ public class Mechanika{
             dzialajZadania();
         }
         try{
-            for(int i = 1; i < 2; i++){
+            for(int i = 1; i <= 10; i++){
                 wynik.append(i);
                 wynik.append("\t");
                 wynik.append(najlepszeZadanie);

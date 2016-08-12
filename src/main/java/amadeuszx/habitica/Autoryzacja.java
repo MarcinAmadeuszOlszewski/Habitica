@@ -21,8 +21,8 @@ public class Autoryzacja{
             if(!file.exists()){
                 file.createNewFile();
                 while(login == null || haslo == null){
-                    login = JOptionPane.showInputDialog("Podaj login");
-                    haslo = JOptionPane.showInputDialog("Podaj haslo");
+                    login = JOptionPane.showInputDialog("Podaj ID Użytkownika");
+                    haslo = JOptionPane.showInputDialog("Podaj Token API");
                 }
                 try (FileWriter fr = new FileWriter(file, false);){
                     fr.write(login + "\n" + haslo);
