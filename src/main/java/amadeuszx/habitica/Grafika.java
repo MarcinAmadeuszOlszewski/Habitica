@@ -13,7 +13,6 @@ public class Grafika extends javax.swing.JFrame {
     public Grafika() {
         initComponents();
         setTitle("Habitica");
-
         String[] dane = Autoryzacja.dane();
         mechanik = new Mechanika(dane[0], dane[1]);
         if (wybranyCzat == null) {
