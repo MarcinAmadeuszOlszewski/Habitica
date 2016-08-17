@@ -3,9 +3,6 @@ package amadeuszx.habitica;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.*;
@@ -176,8 +173,6 @@ public class Mechanika {
             for (int i = data.length() - 1; i >= 0; i--) {
                 LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(data.getJSONObject(i).getLong("timestamp")), ZoneId.of("Europe/Warsaw"));
                 buildier.append(dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                buildier.append(df.format(new Timestamp(data.getJSONObject(i).getLong("timestamp"))));
                 buildier.append("\t");
                 if (data.getJSONObject(i).has("user")) {
                     buildier.append(data.getJSONObject(i).getString("user"));
