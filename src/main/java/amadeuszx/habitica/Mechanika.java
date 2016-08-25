@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.*;
+import javax.swing.text.DefaultCaret;
 import org.json.*;
 
 /**
@@ -27,33 +28,43 @@ public class Mechanika {
 
     public String fireballX10(String czar) {
         StringBuilder wynik = new StringBuilder();
+        wynik.append("<HTML><BODY><table>");
         if (uiidNajlepszeZadanie == null) {
-            wynik.append("Wczytuję listę zadań by znaleźć najlepsze...\n");
+            wynik.append("<tr><td colspan=\"3\">");
+            wynik.append("Wczytuje liste zadan by znalezc najlepsze...\n");
+            wynik.append("</td></tr>");
             dzialajZadania();
         }
         try {
             for (int i = 1; i <= 10; i++) {
+                wynik.append("<tr><td>");
                 wynik.append(i);
-                wynik.append("\t");
+//                wynik.append("\t");
+                wynik.append("</td><td>");
                 wynik.append(najlepszeZadanie);
-                wynik.append("\t");
-                if (dzialajZaklecia(czar, uiidNajlepszeZadanie)) {
-                    wynik.append("trafiony...\n");
+//                wynik.append("\t");
+                wynik.append("</td><td>");
+                if (false) {
+//                if (dzialajZaklecia(czar, uiidNajlepszeZadanie)) {
+                    wynik.append("trafiony...");
                 } else {
-                    wynik.append("pudło...\n");
+                    wynik.append("pudlo...");
                 }
                 Thread.sleep(100);
             }
+            wynik.append("</td></tr>");
         } catch (InterruptedException ex) {
             Logger.getLogger(Grafika.class.getName()).log(Level.SEVERE, null, ex);
         }
+        wynik.append("</table></BODY></HTML>");
+        System.out.println(wynik);
         return wynik.toString();
     }
 
     public String dzialajZaklecia(String zaklecie) {
-        String wynik = "Zaklęcie rozwiało się w nicość...";
+        String wynik = "Zaklecie rozwialo sie w nicosc...";
         if (dzialajZaklecia(zaklecie, null)) {
-            wynik = "BUM! Z fascynacją obserwujesz efekty czaru...";
+            wynik = "BUM! Z fascynacja obserwujesz efekty czaru...";
         }
         return wynik;
     }
@@ -74,12 +85,15 @@ public class Mechanika {
     }
 
     public String dzialajKupNapoj() {
-        String wynik = "Nie zadziałał";
+        String wynik = "Nie zadzialal";
         try {
-            String link = "https://habitica.com/user/buy-health-potion";
-            HttpURLConnection uc = polaczenie(link, "POST");
+            String link = "https://habitica.com/api/v3/user/buy-health-potion";
+            HttpURLConnection uc = polaczenie(link, "GET");
             BufferedReader br = new BufferedReader(new InputStreamReader(uc.getInputStream(), "UTF-8"));
-            if (br.readLine() != null) {
+            String wynik0 = br.readLine();
+            System.out.println(wynik0);
+            if (wynik0 != null) {
+                System.out.println("");
                 wynik = "Kupiony - wypity";
             }
         } catch (IOException ex) {
@@ -112,14 +126,19 @@ public class Mechanika {
             JSONObject object = polaczenieGet("https://habitica.com/api/v3/groups/party/members?includeAllPublicFields=true");
             JSONArray data = object.getJSONArray("data");
             StringBuilder buildier = new StringBuilder(2048);
+            buildier.append("<HTML><BODY><table>");
             if (data.length() < 30) {
                 for (int i = 0; i < data.length(); i++) {
+                    buildier.append("<tr><td>");
                     buildier.append(data.getJSONObject(i).getJSONObject("profile").getString("name"));
-                    buildier.append("\t\t");
+                    buildier.append("</td><td>");
+//                    buildier.append("\t\t");
                     buildier.append(data.getJSONObject(i).getJSONObject("stats").getInt("hp"));
-                    buildier.append("\n");
+                    buildier.append("</td></tr>");
+//                    buildier.append("\n");
                 }
             }
+            buildier.append("</table></BODY></HTML>");
             wynik = buildier.toString();
         } catch (IOException | JSONException ex) {
             Logger.getLogger(Mechanika.class.getName()).log(Level.SEVERE, null, ex);
@@ -134,8 +153,10 @@ public class Mechanika {
             JSONArray data = object.getJSONArray("data");
             StringBuilder buildier = new StringBuilder(2048);
             long maximum = Long.MIN_VALUE;
+            buildier.append("<HTML><BODY><table>");
             for (int i = 0; i < data.length(); i++) {
                 long value = data.getJSONObject(i).getLong("value");
+                buildier.append("<tr><td>");
                 if (data.getJSONObject(i).has("completed")) {
                     buildier.append(data.getJSONObject(i).getBoolean("completed"));
                     if (value >= maximum) {
@@ -147,15 +168,20 @@ public class Mechanika {
                 } else {
                     buildier.append("---");
                 }
-                buildier.append("\t");
+                buildier.append("</td><td>");
+//                buildier.append("\t");
                 buildier.append(value);
-                buildier.append("\t");
+//                buildier.append("\t");
+                buildier.append("</td><td>");
                 buildier.append(data.getJSONObject(i).getString("type"));
-                buildier.append("\t");
+//                buildier.append("\t");
+                buildier.append("</td><td>");
                 buildier.append(data.getJSONObject(i).getString("text"));
-                buildier.append("\n");
+//                buildier.append("\n");
+                buildier.append("</td></tr>");
 
             }
+            buildier.append("</table></BODY></HTML>");
             wynik = buildier.toString();
 //            System.out.println(najlepszeZadanie);
         } catch (IOException | JSONException ex) {
@@ -170,22 +196,28 @@ public class Mechanika {
             JSONObject object = polaczenieGet("https://habitica.com/api/v3/groups/" + idCzatu + "/chat");
             JSONArray data = object.getJSONArray("data");
             StringBuilder buildier = new StringBuilder(2048);
+            buildier.append("<HTML><BODY><table>");
             for (int i = data.length() - 1; i >= 0; i--) {
+                buildier.append("<tr VALIGN=TOP ><td style=\"width:80px;\">");
                 LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(data.getJSONObject(i).getLong("timestamp")), ZoneId.of("Europe/Warsaw"));
-                buildier.append(dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                buildier.append("\t");
+                buildier.append(dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+//                buildier.append("\t");
+                buildier.append("</td><td style=\"width:100px;\">");
                 if (data.getJSONObject(i).has("user")) {
                     buildier.append(data.getJSONObject(i).getString("user"));
                 } else {
                     buildier.append("-----");
                 }
-                buildier.append("\t\t");
+//                buildier.append("\t\t");
+                buildier.append("</td style=\"width:480px\"><td>");
                 StringBuilder tekst = new StringBuilder(data.getJSONObject(i).getString("text"));
-                usowanieNowejLinii(tekst); 
+                usowanieNowejLinii(tekst);
                 dzielenieDlugiejLini(tekst);
                 buildier.append(tekst);
-                buildier.append("\n");
+//                buildier.append("\n");
+                buildier.append("</td></tr>");
             }
+            buildier.append("</table></BODY></HTML>");
             wynik = buildier.toString();
         } catch (IOException | JSONException ex) {
             Logger.getLogger(Mechanika.class.getName()).log(Level.SEVERE, null, ex);
@@ -197,7 +229,8 @@ public class Mechanika {
         if (tekst.length() > 200) {
             int dziel = tekst.length() / 200;
             for (int j = 1; j <= dziel; j++) {
-                tekst.insert(j * 200, "\n\t\t\t\t");
+                tekst.insert(j * 200, "<br>");
+//                tekst.insert(j * 200, "\n\t\t\t\t");
             }
         }
     }
@@ -205,7 +238,7 @@ public class Mechanika {
     private void usowanieNowejLinii(StringBuilder tekst) {
         int nowaLinia = tekst.indexOf("\n");
         while (nowaLinia >= 0) {
-            tekst.replace(nowaLinia, nowaLinia + 1, "");
+            tekst.replace(nowaLinia, nowaLinia + 1, "<br>");
             nowaLinia = tekst.indexOf("\n");
         }
     }

@@ -3,6 +3,7 @@ package amadeuszx.habitica;
 import static amadeuszx.habitica.enumy.Czary.*;
 import static amadeuszx.habitica.enumy.Czaty.*;
 import java.awt.event.KeyEvent;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -18,6 +19,8 @@ public class Grafika extends javax.swing.JFrame {
         if (wybranyCzat == null) {
             czatDruzynyActionPerformed(null);
         }
+        wiadomosc.setToolTipText("Ctrl + Enter wysyla wiadomosc.");
+        wyslijWiadomosc.setToolTipText("Ctrl + Enter wysyla wiadomosc.");
     }
 
     /**
@@ -32,9 +35,6 @@ public class Grafika extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jFrame1 = new javax.swing.JFrame();
         jFrame2 = new javax.swing.JFrame();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        wynik = new javax.swing.JTextArea();
-        wiadomosc = new javax.swing.JTextField();
         wyslijWiadomosc = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
@@ -46,6 +46,10 @@ public class Grafika extends javax.swing.JFrame {
         manaRozdawanie = new javax.swing.JButton();
         leczenie = new javax.swing.JButton();
         napojLeczacy = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        wynik = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        wiadomosc = new javax.swing.JTextArea();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -81,16 +85,6 @@ public class Grafika extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        wynik.setColumns(20);
-        wynik.setRows(5);
-        jScrollPane1.setViewportView(wynik);
-
-        wiadomosc.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                wiadomoscKeyPressed(evt);
-            }
-        });
 
         wyslijWiadomosc.setText("wyslij");
         wyslijWiadomosc.addActionListener(new java.awt.event.ActionListener() {
@@ -165,7 +159,7 @@ public class Grafika extends javax.swing.JFrame {
             .addComponent(listaZadan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(plomienie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(manaRozdawanie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(leczenie, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+            .addComponent(leczenie, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
             .addComponent(napojLeczacy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
@@ -178,7 +172,7 @@ public class Grafika extends javax.swing.JFrame {
                 .addComponent(listaZadan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(zdrowieDruzyny)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 293, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
                 .addComponent(napojLeczacy)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(plomienie)
@@ -190,31 +184,46 @@ public class Grafika extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(jPanel2);
 
+        wynik.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        wynik.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jScrollPane3.setViewportView(wynik);
+
+        wiadomosc.setColumns(20);
+        wiadomosc.setRows(5);
+        wiadomosc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                wiadomoscKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(wiadomosc);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(wiadomosc)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 784, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
                     .addComponent(wyslijWiadomosc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(wyslijWiadomosc)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(wiadomosc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(wyslijWiadomosc)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -271,7 +280,7 @@ public class Grafika extends javax.swing.JFrame {
     }//GEN-LAST:event_czatGildiiActionPerformed
 
     private void wiadomoscKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_wiadomoscKeyPressed
-        if (wyslijWiadomosc.isEnabled() && !wiadomosc.getText().isEmpty() && evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER && ((evt.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
             wyslijWiadomoscActionPerformed(null);
         }
     }//GEN-LAST:event_wiadomoscKeyPressed
@@ -318,13 +327,14 @@ public class Grafika extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton leczenie;
     private javax.swing.JButton listaZadan;
     private javax.swing.JButton manaRozdawanie;
     private javax.swing.JButton napojLeczacy;
     private javax.swing.JButton plomienie;
-    private javax.swing.JTextField wiadomosc;
-    private javax.swing.JTextArea wynik;
+    private javax.swing.JTextArea wiadomosc;
+    private javax.swing.JLabel wynik;
     private javax.swing.JButton wyslijWiadomosc;
     private javax.swing.JButton zdrowieDruzyny;
     // End of variables declaration//GEN-END:variables
