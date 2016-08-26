@@ -2,14 +2,19 @@ package amadeuszx.habitica;
 
 import static amadeuszx.habitica.enumy.Czary.*;
 import static amadeuszx.habitica.enumy.Czaty.*;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
-import javax.swing.KeyStroke;
+import javax.swing.JScrollBar;
 
 /**
  *
  * @author MarcinAmadeuszOlszewski
  */
 public class Grafika extends javax.swing.JFrame {
+
+    private boolean naKoniec = true;
+    private int powtorka = 0;
 
     public Grafika() {
         initComponents();
@@ -21,7 +26,18 @@ public class Grafika extends javax.swing.JFrame {
         }
         wiadomosc.setToolTipText("Ctrl + Enter wysyla wiadomosc.");
         wyslijWiadomosc.setToolTipText("Ctrl + Enter wysyla wiadomosc.");
+        jScrollPane3.getVerticalScrollBar().addAdjustmentListener(scrollListener);
     }
+
+    public final AdjustmentListener scrollListener = (AdjustmentEvent event) -> {
+        {
+            JScrollBar scrollBar = (JScrollBar) event.getAdjustable();
+            if (powtorka < 3) {
+                scrollBar.getModel().setValue(scrollBar.getMaximum() - 1);
+                powtorka++;
+            }
+        }
+    };
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -230,54 +246,51 @@ public class Grafika extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void plomienieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plomienieActionPerformed
-        wyslijWiadomosc.setEnabled(false);
-        wynik.setText(mechanik.fireballX10(FIREBALL.idCzaru()));
+        przewijanie(false,mechanik.fireballX10(FIREBALL.idCzaru()));
     }//GEN-LAST:event_plomienieActionPerformed
 
     private void leczenieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leczenieActionPerformed
-        wyslijWiadomosc.setEnabled(false);
-        wynik.setText(mechanik.dzialajZaklecia(BLESSING.idCzaru()));
+        przewijanie(false,mechanik.dzialajZaklecia(BLESSING.idCzaru()));
     }//GEN-LAST:event_leczenieActionPerformed
 
     private void zdrowieDruzynyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zdrowieDruzynyActionPerformed
-        wyslijWiadomosc.setEnabled(false);
-        wynik.setText(mechanik.dzialajListaGraczy());
+        przewijanie(false,mechanik.dzialajListaGraczy());
     }//GEN-LAST:event_zdrowieDruzynyActionPerformed
 
     private void listaZadanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listaZadanActionPerformed
-        wyslijWiadomosc.setEnabled(false);
-        wynik.setText(mechanik.dzialajZadania());
+        przewijanie(false,mechanik.dzialajZadania());
     }//GEN-LAST:event_listaZadanActionPerformed
 
     private void manaRozdawanieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manaRozdawanieActionPerformed
-        wyslijWiadomosc.setEnabled(false);
-        wynik.setText(mechanik.dzialajZaklecia(ETERYCZNY.idCzaru()));
+        przewijanie(false,mechanik.dzialajZaklecia(ETERYCZNY.idCzaru()));
     }//GEN-LAST:event_manaRozdawanieActionPerformed
 
     private void napojLeczacyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_napojLeczacyActionPerformed
-        wyslijWiadomosc.setEnabled(false);
-        wynik.setText(mechanik.dzialajKupNapoj());
+        przewijanie(false,mechanik.dzialajKupNapoj());
     }//GEN-LAST:event_napojLeczacyActionPerformed
 
     private void wyslijWiadomoscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wyslijWiadomoscActionPerformed
-        wyslijWiadomosc.setEnabled(true);
         if (!wiadomosc.getText().isEmpty()) {
-            wynik.setText(mechanik.piszNaCzat(wiadomosc.getText(), wybranyCzat));
+        przewijanie(true,mechanik.piszNaCzat(wiadomosc.getText(), wybranyCzat));
             wiadomosc.setText("");
         }
     }//GEN-LAST:event_wyslijWiadomoscActionPerformed
 
     private void czatDruzynyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_czatDruzynyActionPerformed
-        wyslijWiadomosc.setEnabled(true);
         wybranyCzat = DRUZYNA.idCzatu();
-        wynik.setText(mechanik.dzialajCzat(wybranyCzat));
+        przewijanie(true, mechanik.dzialajCzat(wybranyCzat));
     }//GEN-LAST:event_czatDruzynyActionPerformed
 
     private void czatGildiiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_czatGildiiActionPerformed
-        wyslijWiadomosc.setEnabled(true);
         wybranyCzat = POLAND.idCzatu();
-        wynik.setText(mechanik.dzialajCzat(wybranyCzat));
+        przewijanie(true,mechanik.dzialajCzat(wybranyCzat));
     }//GEN-LAST:event_czatGildiiActionPerformed
+
+    private void przewijanie(boolean wyslijEnabled, String tekst) {
+        wynik.setText(tekst);
+        wyslijWiadomosc.setEnabled(wyslijEnabled);
+        powtorka = 0;
+    }
 
     private void wiadomoscKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_wiadomoscKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER && ((evt.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {

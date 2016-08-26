@@ -198,23 +198,23 @@ public class Mechanika {
             StringBuilder buildier = new StringBuilder(2048);
             buildier.append("<HTML><BODY><table>");
             for (int i = data.length() - 1; i >= 0; i--) {
-                buildier.append("<tr VALIGN=TOP ><td style=\"width:80px;\">");
+                String uzytkownik = "-----";
+                String styl = "";
+                if (data.getJSONObject(i).has("user")) {
+                    uzytkownik = data.getJSONObject(i).getString("user");
+                } else {
+                    styl = "style=\"color: gray\"";
+                }
+                buildier.append("<tr VALIGN=TOP ").append(styl).append("><td style=\"width:80px;\">");
                 LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(data.getJSONObject(i).getLong("timestamp")), ZoneId.of("Europe/Warsaw"));
                 buildier.append(dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-//                buildier.append("\t");
                 buildier.append("</td><td style=\"width:100px;\">");
-                if (data.getJSONObject(i).has("user")) {
-                    buildier.append(data.getJSONObject(i).getString("user"));
-                } else {
-                    buildier.append("-----");
-                }
-//                buildier.append("\t\t");
+                buildier.append(uzytkownik);
                 buildier.append("</td style=\"width:480px\"><td>");
                 StringBuilder tekst = new StringBuilder(data.getJSONObject(i).getString("text"));
                 usowanieNowejLinii(tekst);
                 dzielenieDlugiejLini(tekst);
                 buildier.append(tekst);
-//                buildier.append("\n");
                 buildier.append("</td></tr>");
             }
             buildier.append("</table></BODY></HTML>");
