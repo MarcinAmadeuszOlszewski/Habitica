@@ -1,12 +1,15 @@
 package amadeuszx.habitica;
 
+import amadeuszx.habitica.pomocnicze.Postac;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.*;
-import javax.swing.text.DefaultCaret;
 import org.json.*;
 
 /**
@@ -44,8 +47,7 @@ public class Mechanika {
                 wynik.append(najlepszeZadanie);
 //                wynik.append("\t");
                 wynik.append("</td><td>");
-                if (false) {
-//                if (dzialajZaklecia(czar, uiidNajlepszeZadanie)) {
+                if (dzialajZaklecia(czar, uiidNajlepszeZadanie)) {
                     wynik.append("trafiony...");
                 } else {
                     wynik.append("pudlo...");
@@ -57,7 +59,7 @@ public class Mechanika {
             Logger.getLogger(Grafika.class.getName()).log(Level.SEVERE, null, ex);
         }
         wynik.append("</table></BODY></HTML>");
-        System.out.println(wynik);
+//        System.out.println(wynik);
         return wynik.toString();
     }
 
@@ -88,10 +90,9 @@ public class Mechanika {
         String wynik = "Nie zadzialal";
         try {
             String link = "https://habitica.com/api/v3/user/buy-health-potion";
-            HttpURLConnection uc = polaczenie(link, "GET");
+            HttpURLConnection uc = polaczenie(link, "POST");
             BufferedReader br = new BufferedReader(new InputStreamReader(uc.getInputStream(), "UTF-8"));
             String wynik0 = br.readLine();
-            System.out.println(wynik0);
             if (wynik0 != null) {
                 System.out.println("");
                 wynik = "Kupiony - wypity";
@@ -125,25 +126,51 @@ public class Mechanika {
         try {
             JSONObject object = polaczenieGet("https://habitica.com/api/v3/groups/party/members?includeAllPublicFields=true");
             JSONArray data = object.getJSONArray("data");
-            StringBuilder buildier = new StringBuilder(2048);
-            buildier.append("<HTML><BODY><table>");
+            List<Postac> postacie = new ArrayList<>();
             if (data.length() < 30) {
-                for (int i = 0; i < data.length(); i++) {
-                    buildier.append("<tr><td>");
-                    buildier.append(data.getJSONObject(i).getJSONObject("profile").getString("name"));
-                    buildier.append("</td><td>");
-//                    buildier.append("\t\t");
-                    buildier.append(data.getJSONObject(i).getJSONObject("stats").getInt("hp"));
-                    buildier.append("</td></tr>");
-//                    buildier.append("\n");
-                }
+                pobierzListePostaci(data, postacie);
+                wynik = przygotujWynikZdrowieDruzyny(postacie).toString();
             }
-            buildier.append("</table></BODY></HTML>");
-            wynik = buildier.toString();
         } catch (IOException | JSONException ex) {
             Logger.getLogger(Mechanika.class.getName()).log(Level.SEVERE, null, ex);
         }
         return wynik;
+    }
+
+    private StringBuilder przygotujWynikZdrowieDruzyny(List<Postac> postacie) {
+        StringBuilder buildier = new StringBuilder(2048);
+        buildier.append("<HTML><BODY><table>");
+        for (Postac p : postacie) {
+            String styl = "";
+            if (p.getZdrowie() == 50) {
+                styl = "style=\"color: gray\"";
+            } else if (p.getZdrowie() < 50 && p.getZdrowie() >= 40) {
+                styl = "style=\"color: yellow\"";
+            } else if (p.getZdrowie() < 40 && p.getZdrowie() >= 30) {
+                styl = "style=\"color: orange\"";
+            } else if (p.getZdrowie() < 30 && p.getZdrowie() > 0) {
+                styl = "style=\"color: red\"";
+            } else {
+                styl = "style=\"background: black; color: red\"";
+            }
+            buildier.append("<tr ").append(styl).append("><td>");
+            buildier.append(p.getImie());
+            buildier.append("</td><td>");
+            buildier.append(p.getZdrowie());
+            buildier.append("</td></tr>");
+        }
+        buildier.append("</table></BODY></HTML>");
+        return buildier;
+    }
+
+    private void pobierzListePostaci(JSONArray data, List<Postac> postacie) throws JSONException {
+        for (int i = 0; i < data.length(); i++) {
+            int zdrowie = data.getJSONObject(i).getJSONObject("stats").getInt("hp");
+            String imie = data.getJSONObject(i).getJSONObject("profile").getString("name");
+            postacie.add(new Postac(imie, zdrowie));
+            
+        }
+        Collections.sort(postacie, Postac.pobierzComparatorRanni());
     }
 
     public String dzialajZadania() {

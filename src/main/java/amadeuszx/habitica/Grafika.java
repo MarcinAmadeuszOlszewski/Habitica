@@ -27,6 +27,7 @@ public class Grafika extends javax.swing.JFrame {
         wiadomosc.setToolTipText("Ctrl + Enter wysyla wiadomosc.");
         wyslijWiadomosc.setToolTipText("Ctrl + Enter wysyla wiadomosc.");
         jScrollPane3.getVerticalScrollBar().addAdjustmentListener(scrollListener);
+        jScrollPane3.getVerticalScrollBar().setUnitIncrement(20);
     }
 
     public final AdjustmentListener scrollListener = (AdjustmentEvent event) -> {
